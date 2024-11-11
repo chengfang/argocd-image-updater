@@ -111,3 +111,4 @@ see how we can make this happen.
 
 There is [an open proposal](https://github.com/argoproj/argo-cd/issues/7385) to migrate this project into the `argoproj` org (out
 of the `argoproj-labs` org) and include it in the installation of Argo CD.
+new fix to test.release-0.15
