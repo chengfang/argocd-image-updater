@@ -29,3 +29,4 @@ Please report vulnerabilities by e-mail to the following address:
 
 * jann@mistrust.net
 
+fix to SECURITY.md in master
