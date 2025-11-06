@@ -1,7 +1,5 @@
 # Build the manager binary
-FROM --platform=$BUILDPLATFORM golang:1.24 AS builder
-ARG TARGETOS
-ARG TARGETARCH
+FROM golang:1.24 AS builder
 
 WORKDIR /src/argocd-image-updater
 # Copy the Go Modules manifests
@@ -13,9 +11,9 @@ RUN go mod download
 COPY . .
 
 RUN mkdir -p dist && \
-	OS=${TARGETOS:-linux} ARCH=${TARGETARCH} make build
+	make build
 
-FROM --platform=$TARGETPLATFORM alpine:3.22
+FROM alpine:3.22
 
 RUN apk update && \
     apk upgrade && \

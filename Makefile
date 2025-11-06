@@ -149,10 +149,7 @@ docker-push: ## Push docker image with the manager.
 PLATFORMS ?= linux/arm64,linux/amd64
 .PHONY: docker-buildx
 docker-buildx: ## Build and push docker image for the manager for cross-platform support
-	$(CONTAINER_TOOL) buildx create --name image-updater-builder --driver docker-container --use --bootstrap
-	$(CONTAINER_TOOL) buildx build --push --progress=plain --platform=$(PLATFORMS) --tag ${IMG} -f Dockerfile .
-	- $(CONTAINER_TOOL) buildx rm image-updater-builder --force
-
+	$(CONTAINER_TOOL) buildx build --pull --push --progress=plain --platform=$(PLATFORMS) --tag ${IMG} .
 
 .PHONY: build-installer
 build-installer: manifests generate kustomize ## Generate a consolidated YAML with CRDs and deployment.
