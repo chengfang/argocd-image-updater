@@ -37,6 +37,18 @@ type WebhookConfig struct {
 	CloudEventsSecret string
 	// RateLimitNumAllowedRequests is the number of allowed requests per hour for rate limiting (0 disables rate limiting)
 	RateLimitNumAllowedRequests int
+	// DisableTLS disables TLS and runs the webhook server with plain HTTP
+	DisableTLS bool
+	// TLSCertFile is the path to the TLS certificate file
+	TLSCertFile string
+	// TLSKeyFile is the path to the TLS private key file
+	TLSKeyFile string
+	// TLSMinVersion is the minimum TLS version (e.g. "1.2", "1.3")
+	TLSMinVersion string
+	// TLSMaxVersion is the maximum TLS version (e.g. "1.2", "1.3")
+	TLSMaxVersion string
+	// TLSCiphers is a colon-separated list of TLS cipher suite names
+	TLSCiphers string
 }
 
 // SetupCommon initializes common components (logging, context, etc.)
@@ -132,6 +144,16 @@ func SetupWebhookServer(webhookCfg *WebhookConfig, reconciler *controller.ImageU
 
 	// Create webhook server
 	server := webhook.NewWebhookServer(webhookCfg.Port, handler, reconciler)
+
+	// Configure TLS
+	server.DisableTLS = webhookCfg.DisableTLS
+	server.TLS = &webhook.TLSConfig{
+		CertFile:   webhookCfg.TLSCertFile,
+		KeyFile:    webhookCfg.TLSKeyFile,
+		MinVersion: webhookCfg.TLSMinVersion,
+		MaxVersion: webhookCfg.TLSMaxVersion,
+		Ciphers:    webhookCfg.TLSCiphers,
+	}
 
 	if webhookCfg.RateLimitNumAllowedRequests > 0 {
 		server.RateLimiter = ratelimit.New(webhookCfg.RateLimitNumAllowedRequests, ratelimit.Per(time.Hour))
