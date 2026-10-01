@@ -1,0 +1,11 @@
+# containerd registry configuration for the k3d demo cluster.
+#
+# This only affects how the *kubelet/containerd* on the node pulls images. The
+# demo registry serves a self-signed certificate, and containerd would reject it
+# just like any other client. Skipping verification here keeps the demo focused
+# on the component under test — argocd-image-updater — which is configured with
+# a real CA certificate instead of skipping verification.
+configs:
+  "127.0.0.1:30000":
+    tls:
+      insecure_skip_verify: true
